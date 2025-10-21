@@ -1,0 +1,24 @@
+services:
+  rag-system:
+    build: .
+    container_name: omni-rag
+    volumes:
+      # Mount your data directory
+      - ./rag/data:/app/rag/data
+      # Mount index directory to persist the index
+      - ./rag/index:/app/rag/index
+      # Mount .env file if you have one
+      - ./.env:/app/.env:ro
+    environment:
+      # Proxy configuration - replace with your actual proxy settings
+      - HTTP_PROXY=${HTTP_PROXY}
+      - HTTPS_PROXY=${HTTPS_PROXY}
+      - NO_PROXY=${NO_PROXY:-localhost,127.0.0.1}
+      # OpenAI API key
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "8000:8000"
+    # Override the default command to keep container running
+    command: tail -f /dev/null
+    # Alternative: run the ask script interactively
+    # command: python rag/index/ask.py
